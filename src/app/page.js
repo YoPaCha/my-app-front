@@ -1,18 +1,34 @@
-import articlesService from "../services/articles.api";
-import TitlePage from "../components/UI/TitlePage";
-import GridPosts from "../components/UI/GridPosts";
+"use client"
+import { useState, useEffect } from "react";
+import TitlePage from "@/components/UI/TitlePage";
+import GridPosts from "@/components/UI/GridPosts";
 
-export default async function Home() {
+export default function Home() {
 
-  // on récupère les articles à l'aide du service articlesService
-  const articles = await articlesService.getArticles();
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch("http://localhost:3030/api/articles")
+      .then(res => res.json())
+      .then(data => {
+        setArticles(data.results);
+      })
+      .catch(err => console.error(err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div>Chargement...</div>;
 
   return (
     <div className="container">
       {/* on utilise le composant TitlePage */}
       <TitlePage title="Accueil" />
       {/* on utilise le composant GridPosts */}
-      <GridPosts articles={articles.results} />
+      {
+        articles && <GridPosts articles={articles} />
+      }
     </div>
   )
 }

@@ -16,3 +16,10 @@
 .header__main a{
     text-decoration: none;
 }
+
+.right__part {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
